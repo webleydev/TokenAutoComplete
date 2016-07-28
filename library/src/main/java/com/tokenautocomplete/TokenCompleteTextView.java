@@ -539,12 +539,30 @@ public abstract class TokenCompleteTextView<T> extends MultiAutoCompleteTextView
         int start = getCorrectedTokenBeginning(end);
 
         //Don't allow 0 length entries to filter
+        return end - start >= getThreshold();
+    }
+
+    public boolean enoughToFilterForCompletion() {
+        if (tokenizer == null || hintVisible) {
+            return false;
+        }
+
+        int cursorPosition = getSelectionEnd();
+
+        if (cursorPosition < 0) {
+            return false;
+        }
+
+        int end = getCorrectedTokenEnd();
+        int start = getCorrectedTokenBeginning(end);
+
+        //Don't allow 0 length entries to filter
         return end - start >= Math.max(getThreshold(), 1);
     }
 
     @Override
     public void performCompletion() {
-        if ((getAdapter() == null || getListSelection() == ListView.INVALID_POSITION) && enoughToFilter()) {
+        if ((getAdapter() == null || getListSelection() == ListView.INVALID_POSITION) && enoughToFilterForCompletion()) {
             Object bestGuess;
             if (getAdapter() != null && getAdapter().getCount() > 0 && performBestGuess) {
                 bestGuess = getAdapter().getItem(0);
