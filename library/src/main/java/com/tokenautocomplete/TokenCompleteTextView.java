@@ -508,7 +508,10 @@ public abstract class TokenCompleteTextView<T> extends MultiAutoCompleteTextView
     private void api16Invalidate() {
         if (initialized && !inInvalidate) {
             inInvalidate = true;
-            setShadowLayer(getShadowRadius(), getShadowDx(), getShadowDy(), getShadowColor());
+            //Temporary workaround for #5214
+            try {
+                setShadowLayer(getShadowRadius(), getShadowDx(), getShadowDy(), getShadowColor());
+            } catch (Exception ignored) {}
             inInvalidate = false;
         }
     }
