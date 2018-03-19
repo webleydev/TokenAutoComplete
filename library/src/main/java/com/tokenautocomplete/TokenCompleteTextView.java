@@ -1335,6 +1335,10 @@ public abstract class TokenCompleteTextView<T> extends MultiAutoCompleteTextView
                 //The end of the span is the character index after it
                 spanEnd--;
 
+                if(spanEnd >= text.length()) {
+                    return;
+                }
+
                 //Delete any extra split chars
                 if (spanEnd >= 0 && isSplitChar(text.charAt(spanEnd))) {
                     text.delete(spanEnd, spanEnd + 1);
