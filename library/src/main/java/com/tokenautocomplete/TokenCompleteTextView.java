@@ -768,6 +768,9 @@ public abstract class TokenCompleteTextView<T> extends MultiAutoCompleteTextView
 
                 if (count > 0 && countSpans.length == 0) {
                     lastPosition++;
+                    if(text.length() < lastPosition) {
+                        return;
+                    }
                     CountSpan cs = new CountSpan(count, getContext(), getCurrentTextColor(),
                             (int) getTextSize(), (int) maxTextWidth());
                     text.insert(lastPosition, cs.text);
