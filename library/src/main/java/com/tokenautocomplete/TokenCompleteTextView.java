@@ -438,7 +438,7 @@ public abstract class TokenCompleteTextView<T> extends MultiAutoCompleteTextView
             if(tokens == null) {
                 return description;
             }
-            if (tokens.length > 0) {
+            if (tokens.length > 0 && tokens[0].getToken() != null && tokens[0].getToken().toString() != null) {
                 TokenImageSpan token = tokens[0];
                 description = description.append(tokenizer.terminateToken(token.getToken().toString()));
                 i = text.getSpanEnd(token);
