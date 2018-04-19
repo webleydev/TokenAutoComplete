@@ -102,6 +102,7 @@ public abstract class TokenCompleteTextView<T> extends MultiAutoCompleteTextView
     private boolean savingState = false;
     private boolean shouldFocusNext = false;
     private boolean allowCollapse = true;
+    private boolean shouldOpenOnFocused = false;
 
     private int tokenLimit = -1;
 
@@ -373,6 +374,10 @@ public abstract class TokenCompleteTextView<T> extends MultiAutoCompleteTextView
     @SuppressWarnings("unused")
     public void allowCollapse(boolean allowCollapse) {
         this.allowCollapse = allowCollapse;
+    }
+
+    public void setShouldOpenOnFocused(boolean shouldOpenOnFocused) {
+        this.shouldOpenOnFocused = shouldOpenOnFocused;
     }
 
     /**
@@ -846,6 +851,11 @@ public abstract class TokenCompleteTextView<T> extends MultiAutoCompleteTextView
     @Override
     public void onFocusChanged(boolean hasFocus, int direction, Rect previous) {
         super.onFocusChanged(hasFocus, direction, previous);
+
+        if(shouldOpenOnFocused) {
+            performFiltering(getText(), 0);
+            showDropDown();
+        }
 
         // See if the user left any unfinished tokens and finish them
         if (!hasFocus) performCompletion();
