@@ -1344,6 +1344,10 @@ public abstract class TokenCompleteTextView<T> extends MultiAutoCompleteTextView
                     text.delete(spanEnd, spanEnd + 1);
                 }
 
+                if(text.length() == 0) {
+                    return;
+                }
+
                 if (spanStart >= 0 && isSplitChar(text.charAt(spanStart))) {
                     text.delete(spanStart, spanStart + 1);
                 }
