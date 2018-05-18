@@ -102,6 +102,7 @@ public abstract class TokenCompleteTextView<T> extends MultiAutoCompleteTextView
     private boolean savingState = false;
     private boolean shouldFocusNext = false;
     private boolean allowCollapse = true;
+    private boolean shouldOpenOnFocused = false;
 
     private int tokenLimit = -1;
 
@@ -375,6 +376,10 @@ public abstract class TokenCompleteTextView<T> extends MultiAutoCompleteTextView
         this.allowCollapse = allowCollapse;
     }
 
+    public void setShouldOpenOnFocused(boolean shouldOpenOnFocused) {
+        this.shouldOpenOnFocused = shouldOpenOnFocused;
+    }
+
     /**
      * Set a number of tokens limit.
      *
@@ -435,7 +440,10 @@ public abstract class TokenCompleteTextView<T> extends MultiAutoCompleteTextView
 
             //Replace token spans
             TokenImageSpan[] tokens = text.getSpans(i, i, TokenImageSpan.class);
-            if (tokens.length > 0) {
+            if(tokens == null) {
+                return description;
+            }
+            if (tokens.length > 0 && tokens[0].getToken() != null && tokens[0].getToken().toString() != null) {
                 TokenImageSpan token = tokens[0];
                 description = description.append(tokenizer.terminateToken(token.getToken().toString()));
                 i = text.getSpanEnd(token);
@@ -765,6 +773,9 @@ public abstract class TokenCompleteTextView<T> extends MultiAutoCompleteTextView
 
                 if (count > 0 && countSpans.length == 0) {
                     lastPosition++;
+                    if(text.length() < lastPosition) {
+                        return;
+                    }
                     CountSpan cs = new CountSpan(count, getContext(), getCurrentTextColor(),
                             (int) getTextSize(), (int) maxTextWidth());
                     text.insert(lastPosition, cs.text);
@@ -840,6 +851,11 @@ public abstract class TokenCompleteTextView<T> extends MultiAutoCompleteTextView
     @Override
     public void onFocusChanged(boolean hasFocus, int direction, Rect previous) {
         super.onFocusChanged(hasFocus, direction, previous);
+
+        if(shouldOpenOnFocused) {
+            performFiltering(getText(), 0);
+            showDropDown();
+        }
 
         // See if the user left any unfinished tokens and finish them
         if (!hasFocus) performCompletion();
